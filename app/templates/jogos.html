@@ -45,7 +45,7 @@
                 <tbody>
                     {% for jogo in jogos %}
                     <tr>
-                        <td class="fw-semibold">{{ jogo.titulo }}</td>
+                        <td class="fw-semibold">{ { jogo.titulo } }</td>
                         <td><span class="badge bg-light text-dark border">{ { jogo.plataforma } }</span></td>
                         <td>
                             {% if jogo.concluido %}
