@@ -36,6 +36,33 @@ def adicionar_web(
     return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
 
+@router.get("/jogos/{id}/editar", response_class=HTMLResponse, include_in_schema=False)
+def editar_form_web(id: int, request: Request, db: Session = Depends(get_db)):
+    jogo = db.query(Jogo).filter(Jogo.id == id).first()
+    if not jogo:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Jogo com ID {id} não encontrado")
+    return templates.TemplateResponse(request, "editar.html", {"jogo": jogo})
+
+
+@router.post("/jogos/{id}/editar", response_class=RedirectResponse, status_code=status.HTTP_303_SEE_OTHER,
+             tags=["Web"], summary="Atualizar jogo via Formulário Web")
+def editar_web(
+        id: int,
+        titulo: Annotated[str, Form(description="Título do jogo")],
+        plataforma: Annotated[str, Form(description="Plataforma do jogo")],
+        concluido: Annotated[bool, Form()] = False,
+        db: Session = Depends(get_db),
+):
+    jogo = db.query(Jogo).filter(Jogo.id == id).first()
+    if not jogo:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Jogo com ID {id} não encontrado")
+    jogo.titulo = titulo
+    jogo.plataforma = plataforma
+    jogo.concluido = concluido
+    db.commit()
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+
+
 @router.post("/jogos/{id}/concluir", response_class=RedirectResponse, status_code=status.HTTP_303_SEE_OTHER,
              tags=["Web"], summary="Alternar status do jogo via Formulário Web")
 def alternar_status_web(id: int, db: Session = Depends(get_db)):

@@ -55,6 +55,7 @@
                             {% endif %}
                         </td>
                         <td class="text-end">
+                            <a href="/jogos/{{ jogo.id }}/editar" class="btn btn-sm btn-outline-primary">Editar</a>
                             <form action="/jogos/{{ jogo.id }}/concluir" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-sm btn-outline-success">Alternar</button>
                             </form>
